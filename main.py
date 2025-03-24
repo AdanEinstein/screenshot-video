@@ -12,6 +12,7 @@ class DataType(TypedDict):
     output: str
     threshold: float
     number_screenshots: int
+    remove_duplicates: bool
 
 
 def get_video_duration(video_path: str) -> float:
@@ -95,7 +96,8 @@ def capture_screenshots(info: DataType):
 
 def main(args: DataType):
     capture_screenshots(args)
-    remove_duplicates(args['output'], args['threshold'])
+    if args['remove_duplicates']:
+        remove_duplicates(args['output'], args['threshold'])
 
 if __name__ == '__main__':
     parser = ArgumentParser(
@@ -128,6 +130,12 @@ if __name__ == '__main__':
         help='limite de similaridade (padrão: %(default)s)',
         type=float,
         default=0.6
+    )
+
+    parser.add_argument(
+        '--remove-duplicates', '-r',
+        help='remover os prints duplicados (padrão: %(default)s)',
+        action='store_true'
     )
 
     args = parser.parse_args(sys.argv[1:])
